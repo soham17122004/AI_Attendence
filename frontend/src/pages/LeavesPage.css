@@ -1,0 +1,51 @@
+.leaves-page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.leaves-content {
+  padding: 24px 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.leaves-action-bar {
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.empty-leaves-state {
+  padding: 64px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 640px) {
+  .leaves-content {
+    padding: 16px;
+  }
+  .leaves-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+}

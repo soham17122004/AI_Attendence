@@ -1,0 +1,90 @@
+.ai-status-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.ai-status-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ai-status-title-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ai-status-title-group .ai-icon {
+  color: var(--primary);
+}
+
+.system-online-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.ai-status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  background: #ffffff;
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.status-grid-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.item-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.item-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.item-value.val-success {
+  color: #10b981;
+}
+
+.item-value.val-info {
+  color: #2563eb;
+}
+
+.ai-status-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 4px;
+}
+
+.last-rec-time {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.kiosk-open-btn {
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.2);
+}

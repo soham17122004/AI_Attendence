@@ -1,0 +1,122 @@
+.live-attendance-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.live-header-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--success-light);
+  border: 1px solid var(--success-border);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  width: fit-content;
+}
+
+.live-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #047857;
+  letter-spacing: 0.06em;
+}
+
+.live-events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.empty-live-state {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.empty-live-state p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.live-event-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #ffffff;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.live-event-row:hover {
+  background: #f8fafc;
+  border-color: var(--border-color);
+}
+
+.live-emp-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #eff6ff;
+  color: var(--primary);
+  border: 1px solid #bfdbfe;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.live-emp-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.live-emp-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.live-emp-dept {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.live-event-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.live-type-badge {
+  flex-shrink: 0;
+}
+
+.live-confidence {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.conf-icon {
+  color: var(--primary);
+}

@@ -1,0 +1,75 @@
+.dept-performance-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.empty-dept-perf-state {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.empty-dept-perf-state p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.dept-perf-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.dept-perf-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dept-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.dept-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.dept-count {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dept-percentage {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.dept-percentage.rate-high { color: #10b981; }
+.dept-percentage.rate-medium { color: #2563eb; }
+.dept-percentage.rate-low { color: #f59e0b; }
+
+.dept-progress-track {
+  width: 100%;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.dept-progress-bar {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dept-progress-bar.bar-high { background: #10b981; }
+.dept-progress-bar.bar-medium { background: #2563eb; }
+.dept-progress-bar.bar-low { background: #f59e0b; }
