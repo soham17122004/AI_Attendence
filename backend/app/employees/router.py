@@ -81,8 +81,7 @@ def create_employee(
     response_model=List[EmployeeResponse]
 )
 def get_employees(
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user)
+    db: Session = Depends(get_db)
 ):
     employees = (
         db.query(Employee)

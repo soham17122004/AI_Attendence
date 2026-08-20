@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback, Component } from 'react';
 import { Camera as CameraIcon, ShieldAlert, Sparkles, Settings, SwitchCamera } from 'lucide-react';
 import { Camera } from '@capacitor/camera';
 import { Capacitor } from '@capacitor/core';
@@ -6,7 +6,41 @@ import attendanceService from '../services/attendanceService';
 import { API_BASE_URL } from '../config/api';
 import '../App.css';
 
-export default function FaceAttendanceScreen() {
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, info: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, info) {
+    console.error("ErrorBoundary caught an error", error, info);
+    this.setState({ info });
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: 20, background: 'black', color: 'red', height: '100vh', overflow: 'auto' }}>
+          <h2>Something went wrong!</h2>
+          <p>{this.state.error?.toString()}</p>
+          <pre style={{ fontSize: '12px', whiteSpace: 'pre-wrap' }}>{this.state.info?.componentStack}</pre>
+        </div>
+      );
+    }
+    return this.props.children; 
+  }
+}
+
+export default function FaceAttendanceScreenWrapper() {
+  return (
+    <ErrorBoundary>
+      <FaceAttendanceScreen />
+    </ErrorBoundary>
+  );
+}
+
+function FaceAttendanceScreen() {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
@@ -48,13 +82,17 @@ export default function FaceAttendanceScreen() {
             attendanceService.getFaceProfiles().catch(() => []),
             attendanceService.getKiosks().catch(() => [])
           ]);
-          setEmployees(empData);
+          const safeEmpData = Array.isArray(empData) ? empData : [];
+          const safeProfData = Array.isArray(profData) ? profData : [];
+          const safeKioskData = Array.isArray(kioskData) ? kioskData : [];
+          
+          setEmployees(safeEmpData);
           const pMap = {};
-          profData.forEach(p => {
+          safeProfData.forEach(p => {
             pMap[p.employee_id] = p;
           });
           setFaceProfiles(pMap);
-          setKiosks(kioskData);
+          setKiosks(safeKioskData);
         } catch (err) {
           console.error("Failed to load settings data:", err);
         }
@@ -858,36 +896,31 @@ export default function FaceAttendanceScreen() {
 
       {/* Settings Modal */}
       {showSettings && (
-        <div className="settings-backdrop" onClick={() => setShowSettings(false)}>
-          <div className="settings-card glass-panel" onClick={(e) => e.stopPropagation()}>
-            <h2 className="settings-title">Configure Backend URL</h2>
-            <p className="settings-desc">
-              Enter the SmartAttend AI API base URL. This is required for the mobile app to communicate with the host server.
+        <div style={{ position: 'absolute', top: 0, left: 0, width: '100vw', height: '100vh', backgroundColor: 'rgba(0,0,0,0.9)', zIndex: 999999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }} onClick={() => setShowSettings(false)}>
+          <div style={{ backgroundColor: '#1e293b', padding: '24px', width: '100%', maxWidth: '380px', borderRadius: '16px', display: 'flex', flexDirection: 'column', color: 'white' }} onClick={(e) => e.stopPropagation()}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '8px', color: 'white' }}>Configure Backend URL</h2>
+            <p style={{ fontSize: '0.9rem', color: '#cbd5e1', marginBottom: '16px' }}>
+              Enter the SmartAttend AI API base URL.
             </p>
             <input
               type="text"
-              className="settings-input"
               value={settingsUrl}
               onChange={(e) => setSettingsUrl(e.target.value)}
               placeholder="e.g. http://192.168.1.50:8000"
-              style={{ marginBottom: '16px' }}
+              style={{ padding: '12px', marginBottom: '16px', color: 'white', backgroundColor: '#0f172a', border: '1px solid #475569', borderRadius: '8px', width: '100%' }}
             />
 
             {/* Choose Terminal Section */}
-            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', marginTop: '4px', marginBottom: '12px' }}>
-              <h2 className="settings-title" style={{ fontSize: '1.05rem', marginBottom: '4px' }}>Kiosk Terminal ID</h2>
-              <p className="settings-desc" style={{ marginBottom: '8px' }}>
-                Select which terminal this mobile device represents.
-              </p>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '12px', marginBottom: '12px' }}>
+              <h2 style={{ fontSize: '1.05rem', marginBottom: '4px', color: 'white' }}>Kiosk Terminal ID</h2>
               <select
-                className="settings-input"
                 value={selectedKioskId}
                 onChange={(e) => {
                   const val = Number(e.target.value);
                   setSelectedKioskId(val);
                   localStorage.setItem('kiosk_device_id', val);
                 }}
-                style={{ width: '100%' }}
+                style={{ padding: '12px', color: 'white', backgroundColor: '#0f172a', border: '1px solid #475569', borderRadius: '8px', width: '100%' }}
               >
                 {kiosks.length === 0 ? (
                   <option value="2">Mobile Scanner Device (Default)</option>
@@ -902,31 +935,26 @@ export default function FaceAttendanceScreen() {
             </div>
 
             {/* Face Registration Section */}
-            <div style={{ borderTop: '1px solid rgba(0,0,0,0.1)', paddingTop: '16px', marginTop: '8px' }}>
-              <h2 className="settings-title" style={{ fontSize: '1.1rem', marginBottom: '4px' }}>Register Employee Face</h2>
-              <p className="settings-desc" style={{ marginBottom: '12px' }}>
-                Select an employee to enroll or update their face profile from this device's camera.
-              </p>
+            <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '16px', marginBottom: '16px' }}>
+              <h2 style={{ fontSize: '1.1rem', marginBottom: '4px', color: 'white' }}>Register Employee Face</h2>
               <select
-                className="settings-input"
                 value={selectedEmpId}
                 onChange={(e) => setSelectedEmpId(e.target.value)}
-                style={{ marginBottom: '16px' }}
+                style={{ padding: '12px', marginBottom: '12px', color: 'white', backgroundColor: '#0f172a', border: '1px solid #475569', borderRadius: '8px', width: '100%' }}
               >
                 <option value="">Choose Employee...</option>
                 {employees.map(emp => {
                   const isRegistered = !!faceProfiles[emp.id];
                   return (
                     <option key={emp.id} value={emp.id}>
-                      {emp.first_name} {emp.last_name} (ID: #{emp.employee_id}) {isRegistered ? '✓' : '[Pending]'}
+                      {emp.first_name} {emp.last_name} {isRegistered ? '✓' : '[Pending]'}
                     </option>
                   );
                 })}
               </select>
               <button
-                className="settings-btn btn-save"
-                style={{ width: '100%', display: 'block', background: '#db2777', boxShadow: '0 4px 12px rgba(219, 39, 119, 0.3)', marginBottom: '12px' }}
                 disabled={!selectedEmpId}
+                style={{ width: '100%', padding: '12px', backgroundColor: selectedEmpId ? '#db2777' : '#6b7280', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 'bold' }}
                 onClick={() => {
                   setRegistrationMode(true);
                   setShowSettings(false);
@@ -937,28 +965,28 @@ export default function FaceAttendanceScreen() {
               </button>
             </div>
 
-            <div className="settings-actions">
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
               <button
-                className="settings-btn btn-cancel"
+                style={{ padding: '10px 20px', backgroundColor: '#f1f5f9', color: '#475569', borderRadius: '8px', border: 'none', fontWeight: 'bold' }}
                 onClick={() => setShowSettings(false)}
               >
                 Close
               </button>
               <button
-                className="settings-btn btn-save"
+                style={{ padding: '10px 20px', backgroundColor: '#4f46e5', color: 'white', borderRadius: '8px', border: 'none', fontWeight: 'bold' }}
                 onClick={() => {
-                  if (settingsUrl.trim()) {
-                    localStorage.setItem('api_base_url', settingsUrl.trim());
-                    window.location.reload();
-                  }
+                  localStorage.setItem('api_base_url', settingsUrl);
+                  setShowSettings(false);
+                  window.location.reload();
                 }}
               >
-                Save URL & Restart
+                Save Changes
               </button>
             </div>
           </div>
         </div>
       )}
+
       {/* Terminal Disabled Fullscreen Blocker */}
       {!terminalActive && !showSettings && (
         <div className="center-splash-backdrop" style={{ backdropFilter: 'blur(24px)', background: 'rgba(15, 23, 42, 0.96)', zIndex: 9999 }}>
