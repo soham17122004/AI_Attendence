@@ -5,29 +5,31 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    DATABASE_USER: str
-    DATABASE_PASSWORD: str
-    DATABASE_HOST: str
-    DATABASE_PORT: int
-    DATABASE_NAME: str
+    DATABASE_URL: str = None
+    DATABASE_USER: str = "postgres"
+    DATABASE_PASSWORD: str = ""
+    DATABASE_HOST: str = "localhost"
+    DATABASE_PORT: int = 5432
+    DATABASE_NAME: str = "postgres"
 
     class Config:
         env_file = ".env"
 
-
 settings = Settings()
 
-
-# Build the PostgreSQL connection safely.
-# This correctly handles passwords containing @, #, %, etc.
-database_url = URL.create(
-    drivername="postgresql+psycopg2",
-    username=settings.DATABASE_USER,
-    password=settings.DATABASE_PASSWORD,
-    host=settings.DATABASE_HOST,
-    port=settings.DATABASE_PORT,
-    database=settings.DATABASE_NAME,
-)
+if settings.DATABASE_URL:
+    # Use the full URL if provided (standard for Render/Supabase)
+    database_url = settings.DATABASE_URL
+else:
+    # Build the PostgreSQL connection safely.
+    database_url = URL.create(
+        drivername="postgresql+psycopg2",
+        username=settings.DATABASE_USER,
+        password=settings.DATABASE_PASSWORD,
+        host=settings.DATABASE_HOST,
+        port=settings.DATABASE_PORT,
+        database=settings.DATABASE_NAME,
+    )
 
 
 import os
